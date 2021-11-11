@@ -1,4 +1,4 @@
-3D print warping
-3D print stringing
-3D print overextrusion
-3d print elephant foot
+print stringing
+overextrusion
+underextrusion
+weak infill

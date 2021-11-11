@@ -1,0 +1,23 @@
+run1
+3D print stringing
+3D print overextrusion
+3D print underextrusion
+3D print weak infill
+
+run2
+stringing 3D print
+overextrusion 3D print
+underextrusion 3D print
+weak infill 3D print
+
+run3
+stringing error 3D print
+overextrusion error 3D print
+underextrusion error 3D print
+weak infill error 3D print
+
+run4
+print stringing
+overextrusion
+underextrusion
+weak infill
