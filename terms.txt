@@ -1,4 +1,4 @@
-print stringing
-overextrusion
-underextrusion
-weak infill
+3d print blobbing
+3d print delamination
+3d print warping
+

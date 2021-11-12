@@ -1,48 +1,71 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
-
+import json
 
 """ specify directory """
 class ImageViewer():
     def __init__(self, imgDir=None):
         self.imgDir = imgDir
-        self.log = {} # imageName : status
         self.window = tk.Tk()
-        self.window.geometry('600x600')
-        self.exmpl1 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "7d00c5f5a6.jpg")
-        self.exmpl2 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "44f98b2f30.jpg")
-        print(self.exmpl1)
-        self.im1, self.im2 = self.loadImgs()
-        photo = ImageTk.PhotoImage(self.im1)
-        self.cv = tk.Canvas()
-        self.cv.pack(side='top', fill='both', expand='yes')
+
+        self.log = {i : None for i in sorted(os.listdir(imgDir))} # imageName : status
+        self.window.geometry('800x800')
+        self.cv = tk.Canvas(self.window, width=800, height=800)
+        #self.exmpl1 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "7d00c5f5a6.jpg")
+        #self.exmpl2 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "44f98b2f30.jpg")
+        #self.imgs = [self.exmpl1, self.exmpl2]
+        self.imgs = self.loadImgs()
+        print(self.imgs[:10])
+        self.curIdx = 0 # start at beginning of list
+        
+        while True:
+            self.window.bind("<Escape>", self.handleEsc)
+            self.window.bind("<Left>", self.getLastImg)
+            self.window.bind("<Right>", self.getNextImg)
+            self.window.bind("<p>", self.handleP)
+            self.window.bind("<e>", self.handleE)
+            self.window.bind("<t>", self.handleT)
+            self.updateImg()
+        
+        
+    def updateImg(self, next=False):
+
+        #prev = self.curIdx - 1 if next else self.curIdx + 1
+        self.curImg = Image.open(os.path.join(self.imgDir, self.imgs[self.curIdx]))
+        photo = ImageTk.PhotoImage(self.curImg)
+        self.cv.pack(fill='both', expand='yes')
+        self.cv.delete("all")
         self.cv.create_image(0, 0, image=photo, anchor='nw')
-        self.window.bind("<Escape>", self.handleEsc)
-        self.window.bind("<Left>", self.getLastImg)
-        self.window.bind("<Right>", self.getNextImg)
-
-        """ commands to label images """
-        self.window.bind("<p>", self.handleP)
-        self.window.bind("<e>", self.handleE)
-        self.window.bind("<t>", self.handleT)
-
         self.window.mainloop()
-    
+
     def loadImgs(self):
-        im1 = Image.open(self.exmpl1)
-        im2 = Image.open(self.exmpl2)
-        return im1, im2
+        return sorted(os.listdir(self.imgDir))[:10]
 
     def getNextImg(self, event):
         print(f"next image")
+        if self.curIdx < len(self.imgs) - 1:
+            self.curIdx += 1
+        else:
+            print("last image in dir! wrapping to first image")
+            self.curIdx = 0
+        self.updateImg(True)
 
     def getLastImg(self, event):
         print(f"last image")
+        if self.curIdx > 0:
+            self.curIdx -= 1
+        else:
+            print("first image in dir! wrapping to last image")
+            self.curIdx = len(self.imgs) - 1
+        self.updateImg(False)
+
 
     # pass
     def handleP(self, event):
-        print("pass")
+        print(f"pass {self.imgs[self.curIdx]}")
+        self.log[self.imgs[self.curIdx]] = "pass"
+
 
     # edit
     def handleE(self, event):
@@ -59,12 +82,23 @@ class ImageViewer():
 
     
     def save(self):
-        print("save") 
+        fname = os.path.join(os.getcwd(), "log", self.imgDir.split("/")[-1] + ".json")
+        with open(fname, "w") as f:
+            json.dump(self.log, f)
+        print("saved") 
 
 
+# error types
+ov = os.path.join(os.getcwd(), "imgs", "overextrusion")
+st = os.path.join(os.getcwd(), "imgs", "stringing")
+un = os.path.join(os.getcwd(), "imgs", "underextrusion")
+we = os.path.join(os.getcwd(), "imgs", "weak_infill")
+st = os.path.join(os.getcwd(), "imgs", "stringing")
+un = os.path.join(os.getcwd(), "imgs", "underextrusion")
+we = os.path.join(os.getcwd(), "imgs", "weak_infill")
 
 
-v = ImageViewer()
+v = ImageViewer(ov)
 
 
 

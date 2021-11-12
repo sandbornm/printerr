@@ -12,7 +12,8 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from timeit import default_timer
 
-TERMS = ["stringing", "overextrusion", "underextrusion", "weak infill"]
+#TERMS = ["stringing", "overextrusion", "underextrusion", "weak infill"]
+TERMS = ["blobbing", "delamination", "warping"]
 RUN_DIR = os.path.join(os.getcwd(), "runs")
 runs = sorted(os.listdir(RUN_DIR))
 START_TIME = default_timer
@@ -22,7 +23,8 @@ IMG_DIR = os.path.join(os.getcwd(),"imgs")
 
 def collectUrls():
     shared = {t: set() for t in TERMS}
-    for r in runs:
+    print(runs)
+    for r in runs[-1:]:
         with open(os.path.join(RUN_DIR, r), "r") as f:
             data = json.load(f)
             for k in list(data.keys()):
@@ -30,8 +32,8 @@ def collectUrls():
                     if e in k:
                         for i in range(len(data[k])):
                             shared[e].add(data[k][i])
-    # print("urls per term")
-    # print({k : len(s) for k,s in shared.items()})
+    print("urls per term")
+    print({k : len(s) for k,s in shared.items()})
     return shared
 
 
@@ -85,11 +87,12 @@ def fetch(session, url, drnm):
             imgFile = io.BytesIO(imgData)
             img = Image.open(imgFile).convert("RGB")
             fpath = os.path.join(IMG_DIR, drnm, hashlib.sha1(imgData).hexdigest()[:16] + '.png')
+            print(f"fpath is {fpath}")
             with open(fpath, 'wb') as f:
                 img.save(f, "PNG", quality=85)
                 #saved += 1 # dummy save
         except Exception as e:
-            #print(f"caught {e} while saving image at {url}")
+            print(f"caught {e} while saving image at {url}")
             #imgExc += 1
             pass
 
@@ -116,8 +119,11 @@ async def getImgDataAsync(urls, drnm):
 
 def main(data):
     terms = list(data.keys())
-    for t in tqdm(terms[3:]):
+    print(f"terms {terms}")
+    for t in tqdm(terms):
+        print(f"current term {t}")
         drnm = t.replace(" ", "_")
+        print(f"drnm is {drnm}")
         urls = list(data[t])
 
         loop = asyncio.get_event_loop()
@@ -125,5 +131,22 @@ def main(data):
         loop.run_until_complete(future)
 
 
-data = collectUrls()
-main(data)
+def fetchLog(fname):
+    pass
+
+def dataSummary():
+    l = []
+    ds = os.listdir("/Users/michael/printerr/imgs")
+    for d in ds:
+        sz = len(os.listdir(os.path.join("/Users/michael/printerr/imgs", d)))
+        l.append(sz)
+        print(f"error type: {d} count: {sz}")
+    print("----------------")
+    print(f"total images in dataset: {sum(l)}")
+
+
+# driver
+# data = collectUrls()
+# main(data)
+dataSummary()
+

@@ -33,7 +33,7 @@ class Scraper():
             f.write(json.dumps(metaData))
 
     """ the main scraping entry point """
-    def scrape(self, imgsPerTerm=300):
+    def scrape(self, imgsPerTerm=400):
         br = self.browser
         terms = self.terms
         def bottomScroll():

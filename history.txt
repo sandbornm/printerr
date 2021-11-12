@@ -21,3 +21,8 @@ print stringing
 overextrusion
 underextrusion
 weak infill
+
+run5
+3d print blobbing
+3d print delamination
+3d print warping
