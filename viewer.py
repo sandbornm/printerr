@@ -8,6 +8,14 @@ class ImageViewer():
     def __init__(self, imgDir=None):
         self.imgDir = imgDir
         self.window = tk.Tk()
+        self.batchSize = 60
+
+        # TODO change this after each run
+        """
+        to start: self.depth = [0, self.batchSize] --> 0, 60
+        next: self.depth = [self.batchSize, 2 * self.batchSize] --> 60, 120
+        """
+        self.depth = [2* self.batchSize, 3 * self.batchSize] # last entry is to length of folder
 
         self.log = {i : None for i in sorted(os.listdir(imgDir))} # imageName : status
         self.window.geometry('800x800')
@@ -15,8 +23,11 @@ class ImageViewer():
         #self.exmpl1 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "7d00c5f5a6.jpg")
         #self.exmpl2 = os.path.join(os.getcwd(), "examples", "3d_print_elephant_foot", "44f98b2f30.jpg")
         #self.imgs = [self.exmpl1, self.exmpl2]
-        self.imgs = self.loadImgs()
-        print(self.imgs[:10])
+        self.dirLen, self.imgs = self.loadImgs()
+        self.numSplits = self.dirLen / self.batchSize
+        print(f"num images: {self.dirLen}")
+        print(f"num splits {self.numSplits}")
+
         self.curIdx = 0 # start at beginning of list
         
         while True:
@@ -40,26 +51,26 @@ class ImageViewer():
         self.window.mainloop()
 
     def loadImgs(self):
-        return sorted(os.listdir(self.imgDir))[:10]
+        dirLen = len(os.listdir(self.imgDir))
+        return dirLen, sorted(os.listdir(self.imgDir))[self.depth[0]:self.depth[1]]
 
     def getNextImg(self, event):
-        print("next image")
         if self.curIdx < len(self.imgs) - 1:
             self.curIdx += 1
         else:
             print("last image in dir! wrapping to first image")
             self.curIdx = 0
+        print(f"next image {self.depth[0] + self.curIdx}/{self.depth[1]}")
         self.updateImg(True)
 
     def getLastImg(self, event):
-        print("last image")
         if self.curIdx > 0:
             self.curIdx -= 1
         else:
             print("first image in dir! wrapping to last image")
             self.curIdx = len(self.imgs) - 1
+        print(f"last image {self.depth[0] + self.curIdx}/{self.depth[1]}")
         self.updateImg(False)
-
 
     # pass
     def handleP(self, event):
@@ -84,23 +95,23 @@ class ImageViewer():
 
     
     def save(self):
-        fname = os.path.join(os.getcwd(), "log", self.imgDir.split("/")[-1] + ".json")
+        fname = os.path.join(os.getcwd(), "log", self.imgDir.split("/")[-1] + f"{self.depth[0]}_{self.depth[1]}" + ".json")
         with open(fname, "w") as f:
             json.dump(self.log, f)
-        print(f"saved") 
+        print(f"saved {fname}") 
 
 
 # error types
-ov = os.path.join(os.getcwd(), "imgs", "overextrusion") # ty
-st = os.path.join(os.getcwd(), "imgs", "stringing") # ty
-un = os.path.join(os.getcwd(), "imgs", "underextrusion") # ty
-we = os.path.join(os.getcwd(), "imgs", "weak_infill")
-wa = os.path.join(os.getcwd(), "imgs", "warping") # michael 
-bl = os.path.join(os.getcwd(), "imgs", "blobbing") # michael
-de = os.path.join(os.getcwd(), "imgs", "delamination") # michael
+ov = os.path.join(os.getcwd(), "imgsResized", "overextrusion") # ty
+st = os.path.join(os.getcwd(), "imgsResized", "stringing") # ty
+un = os.path.join(os.getcwd(), "imgsResized", "underextrusion") # ty
+we = os.path.join(os.getcwd(), "imgsResized", "weak_infill")
+wa = os.path.join(os.getcwd(), "imgsResized", "warping") # michael 
+bl = os.path.join(os.getcwd(), "imgsResized", "blobbing") # michael
+de = os.path.join(os.getcwd(), "imgsResized", "delamination") # michael
 
 xy = os.path.join(os.getcwd(), "imgsResized", "stringing")
-v = ImageViewer(xy)
+v = ImageViewer(de)
 
 
 

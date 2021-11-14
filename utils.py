@@ -139,6 +139,8 @@ def dataSummary():
     l = []
     ds = os.listdir("/Users/michael/printerr/imgsResized")
     for d in ds:
+        # dsf = ".DS_Store" in d
+        # print(f"DS_Store found {dsf}")
         sz = len(os.listdir(os.path.join("/Users/michael/printerr/imgs", d)))
         l.append(sz)
         print(f"error type: {d} count: {sz}")
