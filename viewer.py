@@ -43,7 +43,7 @@ class ImageViewer():
         return sorted(os.listdir(self.imgDir))[:10]
 
     def getNextImg(self, event):
-        print(f"next image")
+        print("next image")
         if self.curIdx < len(self.imgs) - 1:
             self.curIdx += 1
         else:
@@ -52,7 +52,7 @@ class ImageViewer():
         self.updateImg(True)
 
     def getLastImg(self, event):
-        print(f"last image")
+        print("last image")
         if self.curIdx > 0:
             self.curIdx -= 1
         else:
@@ -69,11 +69,13 @@ class ImageViewer():
 
     # edit
     def handleE(self, event):
-        print("edit")
+        print(f"edit {self.imgs[self.curIdx]}")
+        self.log[self.imgs[self.curIdx]] = "edit"
 
     # trash
     def handleT(self, event):
-        print("trash")
+        print(f"trash {self.imgs[self.curIdx]}")
+        self.log[self.imgs[self.curIdx]] = "trash"
 
     # save and quit
     def handleEsc(self, event):
@@ -85,20 +87,20 @@ class ImageViewer():
         fname = os.path.join(os.getcwd(), "log", self.imgDir.split("/")[-1] + ".json")
         with open(fname, "w") as f:
             json.dump(self.log, f)
-        print("saved") 
+        print(f"saved") 
 
 
 # error types
-ov = os.path.join(os.getcwd(), "imgs", "overextrusion")
-st = os.path.join(os.getcwd(), "imgs", "stringing")
-un = os.path.join(os.getcwd(), "imgs", "underextrusion")
+ov = os.path.join(os.getcwd(), "imgs", "overextrusion") # ty
+st = os.path.join(os.getcwd(), "imgs", "stringing") # ty
+un = os.path.join(os.getcwd(), "imgs", "underextrusion") # ty
 we = os.path.join(os.getcwd(), "imgs", "weak_infill")
-st = os.path.join(os.getcwd(), "imgs", "stringing")
-un = os.path.join(os.getcwd(), "imgs", "underextrusion")
-we = os.path.join(os.getcwd(), "imgs", "weak_infill")
+wa = os.path.join(os.getcwd(), "imgs", "warping") # michael 
+bl = os.path.join(os.getcwd(), "imgs", "blobbing") # michael
+de = os.path.join(os.getcwd(), "imgs", "delamination") # michael
 
-
-v = ImageViewer(ov)
+xy = os.path.join(os.getcwd(), "imgsResized", "stringing")
+v = ImageViewer(xy)
 
 
 

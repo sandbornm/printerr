@@ -19,6 +19,7 @@ runs = sorted(os.listdir(RUN_DIR))
 START_TIME = default_timer
 
 IMG_DIR = os.path.join(os.getcwd(),"imgs")
+RESIZE_DIR = os.path.join(os.getcwd(), "imgsResized")
 
 
 def collectUrls():
@@ -136,7 +137,7 @@ def fetchLog(fname):
 
 def dataSummary():
     l = []
-    ds = os.listdir("/Users/michael/printerr/imgs")
+    ds = os.listdir("/Users/michael/printerr/imgsResized")
     for d in ds:
         sz = len(os.listdir(os.path.join("/Users/michael/printerr/imgs", d)))
         l.append(sz)
@@ -144,9 +145,24 @@ def dataSummary():
     print("----------------")
     print(f"total images in dataset: {sum(l)}")
 
+""" resize all images to 128 by 128 """
+def resizeImgs(newSize=500):
+    count = 0
+    for di in tqdm(os.listdir(IMG_DIR)):
+        if not os.path.exists(os.path.join(RESIZE_DIR, di)):
+            os.mkdir(os.path.join(RESIZE_DIR, di))
+        for img in os.listdir(os.path.join(IMG_DIR, di)):
+            im = Image.open(os.path.join(IMG_DIR, di, img))
+            sz = (newSize, newSize)
+            imsz = im.resize(sz)
+            imsz.save(os.path.join(RESIZE_DIR, di, img))
+            count +=1 
+    print(count)
+    print("done resizing")
 
 # driver
 # data = collectUrls()
 # main(data)
 dataSummary()
 
+#resizeImgs()

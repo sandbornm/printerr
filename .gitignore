@@ -1,4 +1,5 @@
 imgs/
-imgs.zip
+imgsResized/
+*.zip
 .DS_Store
 log/
