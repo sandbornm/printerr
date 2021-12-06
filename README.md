@@ -1,6 +1,6 @@
-## Printerr
+# Printerr
 
-The repo contains a generic image scraper for sourcing and filtering images scraped from google images to create a computer vision dataset. In this repository we focus specifically on detecting 3D printing errors.
+The repo contains a generic image scraper for sourcing and filtering images scraped from google images to create a computer vision dataset. In this repository we focus specifically on collecting images for detecting 3D printing errors.
 
 ## Results
 
