@@ -2,6 +2,18 @@
 
 The repo contains a generic image scraper for sourcing and filtering images scraped from google images to create a computer vision dataset. In this repository we focus specifically on detecting 3D printing errors.
 
+## Results
+
+Resnet18 pretrained on ImageNet with no finetuning on our data
+
+![prefinetune](./assets/prefinetune.png)
+
+Resnet18 pretrained on ImageNet *with* finetuning on our data
+
+![prefinetune](./assets/postfinetune.png)
+
+
+
 ## Usage instructions
 
 - `scraper.py` defines a class for scraping google images based on user specified search terms. These terms should be provided in `terms.txt` with one search term per line (spaces allowed) and no new line at the end of the file. When run, this file will collect a specified number of images for each term in `terms.txt` and create a text file called `track.txt` that contains a python dictionary with search terms as keys and a list of image urls for each search term as values. The scraper can be run by adding terms to the text file and running `python scraper.py`. The repo assumes the use of python3 and additional dependencies may be needed ( `requirements.txt` and command line options for ease of use are WIP)
@@ -11,7 +23,11 @@ The repo contains a generic image scraper for sourcing and filtering images scra
   - `e` for edit- the image has to be edited before it can be used in the dataset
   - `t` for trash - the image is not fit for the dataset
   - `esc` - will save and quit the application and will write a `.json` file to the `log` directory named after the directory of images shown in the viewer
-    - modifications to the controls including command line options are WIP 
+    - modifications to the controls including command line options are WIP
+
+## Requirements
+
+Assumes Python 3. See `requirements.txt` for dependencies.
 
 ## Disclaimer
 
