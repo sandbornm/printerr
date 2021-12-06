@@ -361,4 +361,3 @@ if __name__ == "__main__":
     data = collectUrls()
     main(data)
     dataSummary()
-
