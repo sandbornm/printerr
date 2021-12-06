@@ -1,5 +1,9 @@
-imgs/
-imgsResized/
+imgs*/
+log/
+test/
+texturegen/
+filtered/
+notes.txt
+*.txt
 *.zip
 .DS_Store
-log/

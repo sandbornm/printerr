@@ -1,4 +1,3 @@
-
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -6,9 +5,6 @@ import time
 import json
 
 
-"""
-The main object for collecting images from the web.
-"""
 class Scraper():
     def __init__(self):
         self.loadTerms()
@@ -88,16 +84,10 @@ class Scraper():
                             br.execute_script("document.querySelector('.mye4qd').click();")
 
                     #rstart = len(res)
-        # done, now store the image data to save images later
-        #self.saveImgs()
+        # done, now store the image data to download images
+        print("scraping complete")
 
-
-
-
-
-
-
-# Driver
+# driver
 if __name__ == "__main__":
     scraper = Scraper()
     scraper.scrape()

@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 import os
 import json
 
-""" specify directory """
+
 class ImageViewer():
     def __init__(self, imgDir=None):
         self.imgDir = imgDir
@@ -14,8 +14,10 @@ class ImageViewer():
         """
         to start: self.depth = [0, self.batchSize] --> 0, 60
         next: self.depth = [self.batchSize, 2 * self.batchSize] --> 60, 120
+        
+        len(os.listdir(imgDir)) - final step
         """
-        self.depth = [2* self.batchSize, 3 * self.batchSize] # last entry is to length of folder
+        self.depth = [self.batchSize, 2*self.batchSize] # last entry is to length of folder
 
         self.log = {i : None for i in sorted(os.listdir(imgDir))} # imageName : status
         self.window.geometry('800x800')
@@ -77,7 +79,6 @@ class ImageViewer():
         print(f"pass {self.imgs[self.curIdx]}")
         self.log[self.imgs[self.curIdx]] = "pass"
 
-
     # edit
     def handleE(self, event):
         print(f"edit {self.imgs[self.curIdx]}")
@@ -93,25 +94,16 @@ class ImageViewer():
         self.save()
         self.window.destroy()
 
-    
     def save(self):
         fname = os.path.join(os.getcwd(), "log", self.imgDir.split("/")[-1] + f"{self.depth[0]}_{self.depth[1]}" + ".json")
         with open(fname, "w") as f:
             json.dump(self.log, f)
         print(f"saved {fname}") 
 
-
-# error types
-ov = os.path.join(os.getcwd(), "imgsResized", "overextrusion") # ty
-st = os.path.join(os.getcwd(), "imgsResized", "stringing") # ty
-un = os.path.join(os.getcwd(), "imgsResized", "underextrusion") # ty
-we = os.path.join(os.getcwd(), "imgsResized", "weak_infill")
-wa = os.path.join(os.getcwd(), "imgsResized", "warping") # michael 
-bl = os.path.join(os.getcwd(), "imgsResized", "blobbing") # michael
-de = os.path.join(os.getcwd(), "imgsResized", "delamination") # michael
-
-xy = os.path.join(os.getcwd(), "imgsResized", "stringing")
-v = ImageViewer(de)
+# driver
+if __name__ == "__main__":
+    ov = os.path.join(os.getcwd(), "imgsResizedF2", "overextrusion") # example
+    v = ImageViewer(ov)
 
 
 
